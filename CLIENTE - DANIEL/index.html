@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netpolix | Administrador de Base de Datos</title>
+    <!-- Google Fonts: Outfit (para textos generales) y Fira Code (para bloques JSON de la API) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Estilos Personalizados Premium -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <!-- CONTENEDOR PRINCIPAL DE LA APP -->
+    <div class="app-container">
+        
+        <!-- BARRA LATERAL (SIDEBAR) -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <i data-lucide="tv-play" class="brand-icon"></i>
+                    <span class="brand-name">NETPOLIX</span>
+                </div>
+                <span class="brand-subtitle">Database Admin</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item active" data-tab="dashboard">
+                        <a href="#dashboard">
+                            <i data-lucide="layout-dashboard"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-tab="roles">
+                        <a href="#roles">
+                            <i data-lucide="key-round"></i>
+                            <span>Roles</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-tab="categorias">
+                        <a href="#categorias">
+                            <i data-lucide="tag"></i>
+                            <span>Categorías</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-tab="clasificaciones">
+                        <a href="#clasificaciones">
+                            <i data-lucide="shield-alert"></i>
+                            <span>Clasificaciones</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-tab="clientes">
+                        <a href="#clientes">
+                            <i data-lucide="users"></i>
+                            <span>Clientes</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-tab="series">
+                        <a href="#series">
+                            <i data-lucide="clapperboard"></i>
+                            <span>Series</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="btn-open-api-console" class="btn btn-console">
+                    <span class="pulse-indicator"></span>
+                    <i data-lucide="terminal"></i>
+                    <span>Ver detalles de API</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="main-content">
+            
+            <!-- CABECERA SUPERIOR (TOPBAR) -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <h1 id="current-section-title">Dashboard</h1>
+                    <p id="current-section-desc" class="text-muted">Resumen general y estadísticas de la base de datos.</p>
+                </div>
+                <div class="topbar-right">
+                    <div class="api-status">
+                        <span id="api-status-dot" class="status-dot status-offline"></span>
+                        <span id="api-status-text">Backend desconectado</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- VISTAS / SECCIONES DINÁMICAS -->
+            <div class="content-body">
+                
+                <!-- SECCIÓN 1: DASHBOARD -->
+                <section id="section-dashboard" class="tab-content active">
+                    <!-- Cards de Estadísticas -->
+                    <div class="stats-grid">
+                        <div class="stat-card card-roles" data-target-tab="roles">
+                            <div class="stat-icon-wrapper">
+                                <i data-lucide="key-round"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Roles</span>
+                                <h3 id="stat-count-roles" class="stat-value">...</h3>
+                            </div>
+                            <div class="stat-card-border"></div>
+                        </div>
+
+                        <div class="stat-card card-categorias" data-target-tab="categorias">
+                            <div class="stat-icon-wrapper">
+                                <i data-lucide="tag"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Categorías</span>
+                                <h3 id="stat-count-categorias" class="stat-value">...</h3>
+                            </div>
+                            <div class="stat-card-border"></div>
+                        </div>
+
+                        <div class="stat-card card-clasificaciones" data-target-tab="clasificaciones">
+                            <div class="stat-icon-wrapper">
+                                <i data-lucide="shield-alert"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Clasificaciones</span>
+                                <h3 id="stat-count-clasificaciones" class="stat-value">...</h3>
+                            </div>
+                            <div class="stat-card-border"></div>
+                        </div>
+
+                        <div class="stat-card card-clientes" data-target-tab="clientes">
+                            <div class="stat-icon-wrapper">
+                                <i data-lucide="users"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Clientes</span>
+                                <h3 id="stat-count-clientes" class="stat-value">...</h3>
+                            </div>
+                            <div class="stat-card-border"></div>
+                        </div>
+
+                        <div class="stat-card card-series" data-target-tab="series">
+                            <div class="stat-icon-wrapper">
+                                <i data-lucide="clapperboard"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Series</span>
+                                <h3 id="stat-count-series" class="stat-value">...</h3>
+                            </div>
+                            <div class="stat-card-border"></div>
+                        </div>
+                    </div>
+
+                    <!-- Panel de Bienvenida y Acciones Rápidas -->
+                    <div class="dashboard-details-grid">
+                        <div class="welcome-panel glass-card">
+                            <div class="welcome-header">
+                                <h2>¡Hola, Administrador! 🍿</h2>
+                                <p>Panel para permite realizar operaciones CRUD en tiempo real sobre la base de datos <strong>bd_netpolix</strong> a través de servicios Flask.</p>
+                            </div>
+                            <div class="quick-tips">
+                                <div class="tip-item">
+                                    <i data-lucide="info" class="text-primary"></i>
+                                  
+                        </div>
+
+                        <div class="db-status-panel glass-card">
+                            <h3>Estado de la Base de Datos</h3>
+                            <div class="status-list">
+                                <div class="status-item">
+                                    <span class="status-name">Motor de Base de Datos</span>
+                                    <span class="status-value text-highlight">MySQL (SQLAlchemy)</span>
+                                </div>
+                                <div class="status-item">
+                                    <span class="status-name">Dirección de la API</span>
+                                    <span class="status-value text-highlight">http://127.0.0.1:5000</span>
+                                </div>
+                                <div class="status-item">
+                                    <span class="status-name">Tablas Vinculadas</span>
+                                    <span class="status-value">5 Tablas Activas</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN 2: ROLES -->
+                <section id="section-roles" class="tab-content">
+                    <div class="table-actions">
+                        <div class="search-wrapper">
+                            <i data-lucide="search" class="search-icon"></i>
+                            <input type="text" id="search-roles" placeholder="Buscar roles por ID o Nombre...">
+                        </div>
+                        <button class="btn btn-primary btn-add" data-action="add-rol">
+                            <i data-lucide="plus"></i>
+                            <span>Agregar Rol</span>
+                        </button>
+                    </div>
+
+                    <div class="glass-card table-responsive">
+                        <table class="data-table" id="table-roles">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%">ID de Rol</th>
+                                    <th style="width: 55%">Nombre del Rol</th>
+                                    <th style="width: 20%; text-align: center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Se carga dinámicamente -->
+                            </tbody>
+                        </table>
+                        <div class="table-empty" id="empty-roles">
+                            <i data-lucide="database-backup"></i>
+                            <p>No se encontraron roles en el sistema.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN 3: CATEGORÍAS -->
+                <section id="section-categorias" class="tab-content">
+                    <div class="table-actions">
+                        <div class="search-wrapper">
+                            <i data-lucide="search" class="search-icon"></i>
+                            <input type="text" id="search-categorias" placeholder="Buscar categorías por ID o Nombre...">
+                        </div>
+                        <button class="btn btn-primary btn-add" data-action="add-categoria">
+                            <i data-lucide="plus"></i>
+                            <span>Agregar Categoría</span>
+                        </button>
+                    </div>
+
+                    <div class="glass-card table-responsive">
+                        <table class="data-table" id="table-categorias">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%">ID de Categoría</th>
+                                    <th style="width: 55%">Nombre</th>
+                                    <th style="width: 20%; text-align: center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Se carga dinámicamente -->
+                            </tbody>
+                        </table>
+                        <div class="table-empty" id="empty-categorias">
+                            <i data-lucide="database-backup"></i>
+                            <p>No se encontraron categorías en el sistema.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN 4: CLASIFICACIONES -->
+                <section id="section-clasificaciones" class="tab-content">
+                    <div class="table-actions">
+                        <div class="search-wrapper">
+                            <i data-lucide="search" class="search-icon"></i>
+                            <input type="text" id="search-clasificaciones" placeholder="Buscar clasificaciones por Tipo o Descripción...">
+                        </div>
+                        <button class="btn btn-primary btn-add" data-action="add-clasificacion">
+                            <i data-lucide="plus"></i>
+                            <span>Agregar Clasificación</span>
+                        </button>
+                    </div>
+
+                    <div class="glass-card table-responsive">
+                        <table class="data-table" id="table-clasificaciones">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%">Tipo</th>
+                                    <th style="width: 55%">Descripción</th>
+                                    <th style="width: 20%; text-align: center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Se carga dinámicamente -->
+                            </tbody>
+                        </table>
+                        <div class="table-empty" id="empty-clasificaciones">
+                            <i data-lucide="database-backup"></i>
+                            <p>No se encontraron clasificaciones en el sistema.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN 5: CLIENTES -->
+                <section id="section-clientes" class="tab-content">
+                    <div class="table-actions">
+                        <div class="search-wrapper">
+                            <i data-lucide="search" class="search-icon"></i>
+                            <input type="text" id="search-clientes" placeholder="Buscar clientes por ID, Nombre o Email...">
+                        </div>
+                        <button class="btn btn-primary btn-add" data-action="add-cliente">
+                            <i data-lucide="plus"></i>
+                            <span>Agregar Cliente</span>
+                        </button>
+                    </div>
+
+                    <div class="glass-card table-responsive">
+                        <table class="data-table" id="table-clientes">
+                            <thead>
+                                <tr>
+                                    <th style="width: 15%">ID Cliente</th>
+                                    <th style="width: 20%">Nombre</th>
+                                    <th style="width: 20%">Apellido</th>
+                                    <th style="width: 25%">Email</th>
+                                    <th style="width: 20%; text-align: center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Se carga dinámicamente -->
+                            </tbody>
+                        </table>
+                        <div class="table-empty" id="empty-clientes">
+                            <i data-lucide="database-backup"></i>
+                            <p>No se encontraron clientes en el sistema.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN 6: SERIES -->
+                <section id="section-series" class="tab-content">
+                    <div class="table-actions">
+                        <div class="search-wrapper">
+                            <i data-lucide="search" class="search-icon"></i>
+                            <input type="text" id="search-series" placeholder="Buscar series por ID, Título o Sinopsis...">
+                        </div>
+                        <button class="btn btn-primary btn-add" data-action="add-serie">
+                            <i data-lucide="plus"></i>
+                            <span>Agregar Serie</span>
+                        </button>
+                    </div>
+
+                    <div class="glass-card table-responsive">
+                        <table class="data-table" id="table-series">
+                            <thead>
+                                <tr>
+                                    <th style="width: 15%">ID Serie</th>
+                                    <th style="width: 25%">Título</th>
+                                    <th style="width: 30%">Sinopsis</th>
+                                    <th style="width: 10%; text-align: center">Temporadas</th>
+                                    <th style="width: 20%; text-align: center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Se carga dinámicamente -->
+                            </tbody>
+                        </table>
+                        <div class="table-empty" id="empty-series">
+                            <i data-lucide="database-backup"></i>
+                            <p>No se encontraron series en el sistema.</p>
+                        </div>
+                    </div>
+                </section>
+                
+            </div>
+        </main>
+    </div>
+
+    <!-- DRAWER LATERAL DESPLEGABLE DE LA CONSOLA API (ESTILO POSTMAN) -->
+    <div id="api-console-drawer" class="drawer-container">
+        <div class="drawer-overlay" id="api-drawer-overlay"></div>
+        <div class="drawer-panel">
+            <div class="drawer-header">
+                <div class="drawer-title">
+                    <i data-lucide="terminal"></i>
+                    <span>Detalles de Solicitudes API</span>
+                </div>
+                <button class="btn-close-drawer" id="btn-close-api-console">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <div class="drawer-body">
+                <div class="console-actions">
+                    <span class="text-muted" style="font-size: 0.85rem">Monitoreo de solicitudes en tiempo real (Postman)</span>
+                    <button id="btn-clear-console" class="btn btn-secondary btn-xs">
+                        <i data-lucide="trash-2"></i>
+                        <span>Limpiar</span>
+                    </button>
+                </div>
+
+                <div class="console-layout">
+                    <!-- Lista de solicitudes (lado izquierdo / arriba) -->
+                    <div class="console-history-container">
+                        <h4>Historial de Peticiones</h4>
+                        <div id="console-history-list" class="console-history-list">
+                            <!-- Se carga dinámicamente -->
+                            <div class="console-empty-history">
+                                <i data-lucide="radio"></i>
+                                <p>Esperando solicitudes HTTP...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel de detalle (lado derecho / abajo) -->
+                    <div class="console-details-panel">
+                        <h4>Detalles de Petición Seleccionada</h4>
+                        <div id="console-details-content" class="console-details-content empty">
+                            <div class="console-empty-details">
+                                <i data-lucide="eye"></i>
+                                <p>Selecciona una petición del historial para ver el detalle de la solicitud y respuesta.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODALES CRUD ================= -->
+    
+    <!-- Modal genérico para formularios -->
+    <div id="crud-modal" class="modal-container">
+        <div class="modal-overlay"></div>
+        <div class="modal-box glass-card">
+            <div class="modal-header">
+                <h3 id="modal-title">Agregar Registro</h3>
+                <button class="btn-close-modal" data-action="close-modal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <form id="crud-form" autocomplete="off">
+                <div class="modal-body" id="modal-fields-container">
+                    <!-- Campos dinámicos inyectados por JS -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-action="close-modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btn-save-record">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación para eliminar -->
+    <div id="delete-modal" class="modal-container">
+        <div class="modal-overlay"></div>
+        <div class="modal-box glass-card modal-confirm">
+            <div class="modal-header">
+                <h3 class="text-danger">¿Confirmar Eliminación?</h3>
+                <button class="btn-close-modal" data-action="close-modal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar este registro? Esta acción modificará directamente la base de datos <strong>bd_netpolix</strong> y no se puede deshacer.</p>
+                <div id="delete-item-preview" class="delete-preview">
+                    <!-- Vista previa del elemento a eliminar -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-action="close-modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="btn-confirm-delete">Eliminar Registro</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR DE NOTIFICACIONES (TOASTS) -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Cargar archivo JavaScript de la aplicación -->
+    <script src="app.js"></script>
+</body>
+</html>
